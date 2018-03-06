@@ -1,3 +1,4 @@
+
 /********
 Default E80 Lab 01 
 Current Author: Christopher McElroy (cmcelroy@g.hmc.edu) '19 (contributed in 2017)
@@ -6,7 +7,6 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 */
 
 /* Libraries */
-//MICHAELS TEST COMMENT
 // general
 #include <Arduino.h>
 #include <Wire.h>
