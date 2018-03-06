@@ -6,7 +6,7 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 */
 
 /* Libraries */
-
+//MICHAELS TEST COMMENT
 // general
 #include <Arduino.h>
 #include <Wire.h>
