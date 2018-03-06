@@ -174,7 +174,7 @@ void PControl() {
   double U_R = U_nom + u;
   double U_L = U_nom - u;
 
-  U_R *= K_R;
+  U_R *= K_R;//Defining control to adjust motor speeds relative to each other
   U_L *= K_L;
 
   //bounding control
