@@ -168,13 +168,14 @@ void PControl() {
   //P control gain constant
   const double K_P = 1.0;
   double U_nom = 50;
-
+  double K_L = 1.0;
+  double K_R = 1.0;
   double u = K_P * yaw_error;
   double U_R = U_nom + u;
   double U_L = U_nom - u;
 
-  U_R *= K_P;
-  U_L *= K_P;
+  U_R *= K_R;
+  U_L *= K_L;
 
   //bounding control
   if(U_R < 0)
