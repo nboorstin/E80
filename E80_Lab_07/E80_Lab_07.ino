@@ -170,6 +170,7 @@ void LongLatToXY(){
 
   //using https://en.wikipedia.org/wiki/Equirectangular_projection
   state_estimator.state.x = RADIUS_OF_EARTH * (gps.state.lon - ORIGIN_LON)*cos(ORIGIN_LAT);
+  state_estimator.state.y = RADIUS_OF_EARTH * (gps.state.lat - ORIGIN_LAT);
 
   
 }
