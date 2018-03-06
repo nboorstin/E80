@@ -168,6 +168,9 @@ void LongLatToXY(){
   // You can access the current GPS latitude and longitude readings with gps.state.lat and gps.state.lon
   // You can access the current imu heading with imu.state.heading
 
+  //using https://en.wikipedia.org/wiki/Equirectangular_projection
+  state_estimator.state.x = RADIUS_OF_EARTH * (gps.state.lon - ORIGIN_LON)*cos(ORIGIN_LAT);
+
   
 }
 
