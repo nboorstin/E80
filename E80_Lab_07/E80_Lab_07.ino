@@ -27,6 +27,7 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 
 #define ORIGIN_LAT  34.106465 
 #define ORIGIN_LON  -117.712488
+#define RADIUS_OF_EARTH 6371000
 
 // template library
 #include <LED.h>
@@ -156,6 +157,28 @@ void PControl() {
     current_way_point = current_way_point + 1;
 
   /*Set P control thrust - students must add code here */
+  //calculate desired yaw angle
+  double yaw_des = atan2(y_des - state_estimator.state.y, x_des - state_estimator.state.x);
+  //calculate current yaw, and make sure its positive
+  double current_yaw = -(state_estimator.state.heading) - 90.0;
+  while(current_yaw < 360)
+    current_yaw += 360;
+  double yaw_error = current_yaw - yaw_des;
+
+  //P control gain constant
+  const double K_P = 1.0;
+  double U_nom = 50;
+
+  double u = K_P * yaw_error;
+  double U_R = U_nom + u;
+  double U_L = U_nom - u;
+
+  U_R *= K_P;
+  U_L *= K_P;
+
+  //bounding control
+
+  
   motorDriver.drive(0,0,0,0);
 }
 
@@ -171,7 +194,7 @@ void LongLatToXY(){
   //using https://en.wikipedia.org/wiki/Equirectangular_projection
   state_estimator.state.x = RADIUS_OF_EARTH * (gps.state.lon - ORIGIN_LON)*cos(ORIGIN_LAT);
   state_estimator.state.y = RADIUS_OF_EARTH * (gps.state.lat - ORIGIN_LAT);
-
+  state_estimator.state.heading = imu.state.heading;
   
 }
 
