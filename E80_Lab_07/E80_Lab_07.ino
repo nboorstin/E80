@@ -177,9 +177,17 @@ void PControl() {
   U_L *= K_P;
 
   //bounding control
+  if(U_R < 0)
+    U_R = 0;
+  if(U_R > 127)
+    U_R = 127;
+  if(U_L < 0)
+    U_L = 0;
+  if(U_L > 127)
+    U_L = 127;
 
   
-  motorDriver.drive(0,0,0,0);
+  motorDriver.drive(U_L,U_R,0,0);
 }
 
 
