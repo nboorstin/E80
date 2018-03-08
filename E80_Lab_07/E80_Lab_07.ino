@@ -25,9 +25,9 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #include <SoftwareSerial.h>
 #define mySerial Serial1
 
-#define ORIGIN_LAT  34.106465 
-#define ORIGIN_LON  -117.712488
-#define RADIUS_OF_EARTH 6371000
+#define ORIGIN_LAT  34.106465 //HMC campus origin
+#define ORIGIN_LON  117.712488 //HMC campus origin
+//because it's positive for some reason??
 
 // template library
 #include <LED.h>
@@ -142,12 +142,16 @@ void loop() {
 
 }
 
+double degToRad(double deg) {
+  return (deg * PI) / 180.0;
+}
+
 void PControl() {
   // hard coded way points to track
-  float x_desired_list[] = {0, 20, 0 };
-  float y_desired_list[] = {0, 0 , 0 };
+  float x_desired_list[] = {125, 150, 125};
+  float y_desired_list[] = {-40, -40, -40};
   int num_way_points = 3;
-  float success_radius = 4.0;
+  float success_radius = 14.0;
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
@@ -158,21 +162,24 @@ void PControl() {
 
   /*Set P control thrust - students must add code here */
   //calculate desired yaw angle
-  double yaw_des = atan2(y_des - state_estimator.state.y, x_des - state_estimator.state.x);
+  float yaw_des = atan2(y_des - state_estimator.state.y, x_des - state_estimator.state.x);
   //calculate current yaw, and make sure its positive
-  double current_yaw = -(state_estimator.state.heading) - 90.0;
-  while(current_yaw < 360)
-    current_yaw += 360;
-  double yaw_error = current_yaw - yaw_des;
+  float current_yaw = -(state_estimator.state.heading) - 90.0;
+  while(current_yaw < -PI)
+    current_yaw += PI;
+  while(current_yaw > PI)
+    current_yaw -= PI;
+    
+  float yaw_error = current_yaw - yaw_des;
 
   //P control gain constant
-  const double K_P = 1.0;
-  double U_nom = 50;
-  double K_L = 1.0;
-  double K_R = 1.0;
-  double u = K_P * yaw_error;
-  double U_R = U_nom + u;
-  double U_L = U_nom - u;
+  const double K_P = 100.0;
+  float U_nom = 50;
+  float K_L = 10.0;
+  float K_R = 10.0;
+  float u = K_P * yaw_error;
+  float U_R = U_nom + u;
+  float U_L = U_nom - u;
 
   U_R *= K_R;//Defining control to adjust motor speeds relative to each other
   U_L *= K_L;
@@ -201,9 +208,14 @@ void LongLatToXY(){
   // You can access the current imu heading with imu.state.heading
 
   //using https://en.wikipedia.org/wiki/Equirectangular_projection
-  state_estimator.state.x = RADIUS_OF_EARTH * (gps.state.lon - ORIGIN_LON)*cos(ORIGIN_LAT);
-  state_estimator.state.y = RADIUS_OF_EARTH * (gps.state.lat - ORIGIN_LAT);
-  state_estimator.state.heading = imu.state.heading;
+  
+  state_estimator.state.x = RADIUS_OF_EARTH_M * (degToRad(gps.state.lon - ORIGIN_LON))*cos((ORIGIN_LAT));
+  state_estimator.state.y = RADIUS_OF_EARTH_M * (degToRad(gps.state.lat - ORIGIN_LAT));
+  state_estimator.state.heading = degToRad(imu.state.heading);
+  while(state_estimator.state.heading > PI)
+    state_estimator.state.heading -= PI;
+  while(state_estimator.state.heading < -PI)
+    state_estimator.state.heading += PI;
   
 }
 
