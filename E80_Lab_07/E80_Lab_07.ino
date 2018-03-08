@@ -25,8 +25,8 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #include <SoftwareSerial.h>
 #define mySerial Serial1
 
-#define ORIGIN_LAT  34.106465 //HMC campus origin
-#define ORIGIN_LON  117.712488 //HMC campus origin
+#define ORIGIN_LAT  34.109463 //Field station 34.106465 //HMC campus origin
+#define ORIGIN_LON  117.712776 // Field station 117.712488 //HMC campus origin
 //because it's positive for some reason??
 
 // template library
@@ -148,10 +148,10 @@ double degToRad(double deg) {
 
 void PControl() {
   // hard coded way points to track
-  float x_desired_list[] = {125, 150, 125};
-  float y_desired_list[] = {-40, -40, -40};
+  float x_desired_list[] = {0, 0, 0};
+  float y_desired_list[] = {0, -20, 0};
   int num_way_points = 3;
-  float success_radius = 14.0;
+  float success_radius = 6.0;
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
@@ -179,7 +179,7 @@ void PControl() {
 
   //P control gain constant
   const double K_P = 100.0;
-  float U_nom = 50;
+  float U_nom = 5.0;
   float K_L = 10.0;
   float K_R = 10.0;
   float u = K_P * yaw_error;
@@ -223,7 +223,7 @@ void LongLatToXY(){
     state_estimator.state.heading += 2*PI;
   
 }
-//test pull comment
+
 float angleDiff(float a){
   while (a>PI)
     a = a - 2*PI;
