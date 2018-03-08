@@ -25,8 +25,8 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #include <SoftwareSerial.h>
 #define mySerial Serial1
 
-#define ORIGIN_LAT  34.109463 //Field station 34.106465 //HMC campus origin
-#define ORIGIN_LON  117.712776 // Field station 117.712488 //HMC campus origin
+#define ORIGIN_LAT  34.1093484 //Field station 34.106465 //HMC campus origin
+#define ORIGIN_LON  117.7127777 // Field station 117.712488 //HMC campus origin
 //because it's positive for some reason??
 
 // template library
@@ -164,7 +164,7 @@ void PControl() {
   //calculate desired yaw angle
   float yaw_des = atan2(y_des - state_estimator.state.y, x_des - state_estimator.state.x);
   //calculate current yaw, and make sure its positive
-  float current_yaw = -(state_estimator.state.heading) - (PI/2.0);
+  float current_yaw = -(state_estimator.state.heading) + (PI/8.0);// - (PI/2.0);
   while(current_yaw < -PI)
     current_yaw += 2*PI;
   while(current_yaw > PI)
@@ -178,9 +178,9 @@ void PControl() {
   
 
   //P control gain constant
-  const double K_P = 100.0;
+  const double K_P = 50.0;
   float U_nom = 5.0;
-  float K_L = 10.0;
+  float K_L = 5.0;
   float K_R = 10.0;
   float u = K_P * yaw_error;
   float U_R = U_nom + u;
