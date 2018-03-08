@@ -164,13 +164,18 @@ void PControl() {
   //calculate desired yaw angle
   float yaw_des = atan2(y_des - state_estimator.state.y, x_des - state_estimator.state.x);
   //calculate current yaw, and make sure its positive
-  float current_yaw = -(state_estimator.state.heading) - 90.0;
+  float current_yaw = -(state_estimator.state.heading) - (PI/2.0);
   while(current_yaw < -PI)
-    current_yaw += PI;
+    current_yaw += 2*PI;
   while(current_yaw > PI)
-    current_yaw -= PI;
+    current_yaw -= 2*PI;
     
   float yaw_error = current_yaw - yaw_des;
+  while(yaw_error < -PI)
+    yaw_error += 2*PI;
+  while(yaw_error > PI)
+    yaw_error -= 2*PI;
+  
 
   //P control gain constant
   const double K_P = 100.0;
@@ -213,9 +218,9 @@ void LongLatToXY(){
   state_estimator.state.y = RADIUS_OF_EARTH_M * (degToRad(gps.state.lat - ORIGIN_LAT));
   state_estimator.state.heading = degToRad(imu.state.heading);
   while(state_estimator.state.heading > PI)
-    state_estimator.state.heading -= PI;
+    state_estimator.state.heading -= 2*PI;
   while(state_estimator.state.heading < -PI)
-    state_estimator.state.heading += PI;
+    state_estimator.state.heading += 2*PI;
   
 }
 
